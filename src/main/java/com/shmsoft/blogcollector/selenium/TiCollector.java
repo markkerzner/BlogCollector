@@ -117,7 +117,7 @@ public class TiCollector implements Runnable {
     public static void main(String[] args) throws Exception {
         TiCollector instance = new TiCollector();
         Settings settings = Settings.getSettings();
-        String[] tags = {"NasdaqGS:AAPL", "NasdaqGS:GOOG", "NasdaqGS:MSFT"};
+        String[] tags = {"Sukkah", "NasdaqGS:GOOG", "NasdaqGS:MSFT"};
         settings.setTags(tags);
         settings.setTotalLimit(10);
         settings.setPerTagLimit(3);
