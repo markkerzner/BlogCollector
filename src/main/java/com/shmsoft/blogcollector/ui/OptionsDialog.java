@@ -12,12 +12,10 @@ import java.text.SimpleDateFormat;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +27,6 @@ public class OptionsDialog extends javax.swing.JDialog {
 
     Logger logger = LoggerFactory.getLogger(getClass().getName());
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-    private static final String SAMPLE_TICKERS = "NasdaqGS:GOOG NYSE:IBM NasdaqGS:AAPL\n";
     /**
      * A return status code - returned if Cancel button has been pressed
      */
@@ -78,13 +75,9 @@ public class OptionsDialog extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
         labelSite = new javax.swing.JLabel();
         siteChoiceCombo = new javax.swing.JComboBox();
-        downloadLimitLabel = new javax.swing.JLabel();
-        downloadLimitText = new javax.swing.JTextField();
-        perTagLimitLabel = new javax.swing.JLabel();
-        perTagLimitText = new javax.swing.JTextField();
-        tagLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tagsList = new javax.swing.JList();
+        tractatesLabel = new javax.swing.JLabel();
 
         setTitle("Download options");
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -111,44 +104,33 @@ public class OptionsDialog extends javax.swing.JDialog {
 
         siteChoiceCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "mkerzner.blogger.com", " ", " " }));
 
-        downloadLimitLabel.setText("Download limit");
-
-        perTagLimitLabel.setText("Per-tag limit");
-
-        tagLabel.setText("Tags");
-
         jScrollPane2.setViewportView(tagsList);
+
+        tractatesLabel.setText("Tractates");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(labelSite)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
-                        .addComponent(siteChoiceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60)
-                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(downloadLimitLabel)
-                            .addComponent(perTagLimitLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(downloadLimitText, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(perTagLimitText, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(tractatesLabel)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(tagLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(141, 141, 141))
-                            .addComponent(jScrollPane2))))
-                .addContainerGap())
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cancelButton))
+                            .addComponent(jScrollPane2)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelSite)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(siteChoiceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(24, 24, 24))))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cancelButton, okButton});
@@ -160,25 +142,19 @@ public class OptionsDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelSite)
                     .addComponent(siteChoiceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tagLabel)
-                .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(downloadLimitLabel)
-                            .addComponent(downloadLimitText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(19, 19, 19)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(perTagLimitLabel)
-                            .addComponent(perTagLimitText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton)
-                    .addComponent(okButton))
-                .addContainerGap())
+                            .addComponent(cancelButton)
+                            .addComponent(okButton))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tractatesLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(55, Short.MAX_VALUE))))
         );
 
         getRootPane().setDefaultButton(okButton);
@@ -255,16 +231,12 @@ public class OptionsDialog extends javax.swing.JDialog {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel downloadLimitLabel;
-    private javax.swing.JTextField downloadLimitText;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labelSite;
     private javax.swing.JButton okButton;
-    private javax.swing.JLabel perTagLimitLabel;
-    private javax.swing.JTextField perTagLimitText;
     private javax.swing.JComboBox siteChoiceCombo;
-    private javax.swing.JLabel tagLabel;
     private javax.swing.JList tagsList;
+    private javax.swing.JLabel tractatesLabel;
     // End of variables declaration//GEN-END:variables
     private int returnStatus = RET_CANCEL;
 
@@ -281,8 +253,6 @@ public class OptionsDialog extends javax.swing.JDialog {
         DefaultComboBoxModel model = new DefaultComboBoxModel(settings.getSites());
         siteChoiceCombo.setModel(model);
         siteChoiceCombo.setSelectedIndex(0);
-        downloadLimitText.setText(numberOrBlank(settings.getTotalLimit()));
-        perTagLimitText.setText(numberOrBlank(settings.getPerTagLimit()));
         tagsList.setListData(settings.getTags());
         tagsList.setSelectedIndices(settings.getSelectedTags());
     }
@@ -307,8 +277,6 @@ public class OptionsDialog extends javax.swing.JDialog {
         try {
             Settings settings = Settings.getSettings();
             settings.setSite(siteChoiceCombo.getSelectedItem().toString());
-            settings.setTotalLimit(blankOrNumber(downloadLimitText.getText()));
-            settings.setPerTagLimit(blankOrNumber(perTagLimitText.getText()));
             settings.setSelectedTags(tagsList.getSelectedIndices());            
         } catch (NumberFormatException | HeadlessException e) {
             logger.debug("Error saving options", e);

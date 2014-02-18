@@ -2,6 +2,8 @@ package com.shmsoft.blogcollector;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +18,6 @@ public class Settings {
     public static final String VERSION = "1.0.1";
     private String site;
     private String[] sites = {"mkerzner.blogspot.com"};
-    private int totalLimit;
-    private int perTagLimit;
     private String[] tags;
     private int[] selectedTags = new int[0];
     private String myDownloadDir = "ti-downloads";
@@ -53,31 +53,28 @@ public class Settings {
     }
 
     /**
-     * @return the totalLimit
-     */
-    public int getTotalLimit() {
-        return totalLimit;
-    }
-
-    /**
-     * @param totalLimit the totalLimit to set
-     */
-    public void setTotalLimit(int totalLimit) {
-        this.totalLimit = totalLimit;
-    }
-
-    /**
-     * @return the tickers
+     * @return the tags
      */
     public String[] getTags() {
         return tags;
     }
 
     /**
-     * @param tickers the tickers to set
+     * @return the selected tags
      */
-    public void setTags(String[] tickers) {
-        this.tags = tickers;
+    public String[] getSelectedTagsByName() {
+        List <String> sTags = new ArrayList<>();
+        for (int i = 0; i < selectedTags.length; ++i) {
+            sTags.add(tags[selectedTags[i]]);
+        }
+        return sTags.toArray(new String[0]);
+    }
+    
+    /**
+     * @param tags the tags to set
+     */
+    public void setTags(String[] tags) {
+        this.tags = tags;
     }
 
     /**
@@ -92,20 +89,6 @@ public class Settings {
      */
     public void setMyDownloadDir(String myDownloadDir) {
         this.myDownloadDir = myDownloadDir;
-    }
-
-    /**
-     * @return the perTagLimit
-     */
-    public int getPerTagLimit() {
-        return perTagLimit;
-    }
-
-    /**
-     * @param perTagLimit the perTagLimit to set
-     */
-    public void setPerTagLimit(int perTagLimit) {
-        this.perTagLimit = perTagLimit;
     }
 
     /**
