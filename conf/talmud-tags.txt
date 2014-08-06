@@ -5,6 +5,7 @@ Bava Kamma
 Bava Metzia
 Bechorot
 Brachot
+Beitzah
 Chullin
 Eruvin
 Gittin
@@ -14,15 +15,18 @@ Kiddushin
 Kinnim
 Makkot
 Me'ilah
+Megillah
 Menachot
 Midot
 Niddah
 Pesachim
+Rosh Hashanah
 Sanhedrin
 Shabbat
 Shekalim
 Shevuot
 Sukkah
+Taanit
 Tamid
 Temurah
 Yoma
