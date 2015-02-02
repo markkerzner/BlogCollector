@@ -6,6 +6,7 @@ Bava Metzia
 Bechorot
 Brachot
 Beitzah
+Chagigah
 Chullin
 Eruvin
 Gittin
@@ -18,6 +19,7 @@ Me'ilah
 Megillah
 Menachot
 Midot
+Moed Katan
 Niddah
 Pesachim
 Rosh Hashanah
@@ -29,5 +31,6 @@ Sukkah
 Taanit
 Tamid
 Temurah
+Yevamot
 Yoma
 Zevachim

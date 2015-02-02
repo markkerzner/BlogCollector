@@ -1,3 +1,5 @@
 logs/
 target/
 nbactions.xml
+.idea/
+*.iml
