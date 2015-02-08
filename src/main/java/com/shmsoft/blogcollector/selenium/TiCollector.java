@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,12 +36,9 @@ public class TiCollector implements Runnable {
     @Override
     public void run() {
         Date startDate = new Date();
-        // The Firefox driver supports javascript 
-        WebDriver driver = new FirefoxDriver();
-//        when you need to execute Javascript - do as below        
-//        if (driver instanceof JavascriptExecutor) {
-//            ((JavascriptExecutor) driver).executeScript("your-java-script");
-//        }
+        
+        WebDriver driver = new HtmlUnitDriver();
+        
 
         String[] tags = Settings.getSettings().getSelectedTagsByName();
         logger.info("Ready to search for {} tages", tags.length);
@@ -109,7 +106,7 @@ public class TiCollector implements Runnable {
     @VisibleForTesting
     List<String> findPosts(String html) {
         List<String> posts = new ArrayList<>();
-        String startMarker = "<h3 itemprop=\"name\" class=\"post-title entry-title\">";
+        String startMarker = "<h3 class=\"post-title entry-title\" itemprop=\"name\">";
         String stopMarker = "<div class=\"post-footer\">";
         int start = 0;
         while (true) {
@@ -162,7 +159,7 @@ public class TiCollector implements Runnable {
     void savePosts(String tag, List<String> posts) {
         try {
             for (String post : posts) {
-                String title = getTitle(post);
+                String title = getTitle(post).trim();
                 titles.add(getTitleWithLink(title));
                 FileUtils.write(new File(Settings.getSettings().getMyDownloadDir() + "/"
                         + tag.toLowerCase() + "/" + getHtmlFileName(title)), "<html>" + post + "</html>");
