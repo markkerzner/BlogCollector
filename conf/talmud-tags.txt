@@ -12,6 +12,7 @@ Eruvin
 Gittin
 Horayot
 Keritot
+Ketubot
 Kiddushin
 Kinnim
 Makkot
@@ -20,6 +21,8 @@ Megillah
 Menachot
 Midot
 Moed Katan
+Nazir
+Nedarim
 Niddah
 Pesachim
 Rosh Hashanah
@@ -27,6 +30,7 @@ Sanhedrin
 Shabbat
 Shekalim
 Shevuot
+Sotah
 Sukkah
 Taanit
 Tamid

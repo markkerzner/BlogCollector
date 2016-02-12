@@ -71,6 +71,8 @@ public class TiCollector implements Runnable {
         html = html.replaceAll("–", "-");
         html = html.replaceAll("“", "\"");
         html = html.replaceAll("”", "\"");
+        // TODO did not work for some reason. I am telling you, sanitize all :)
+        html = html.replaceAll("&nbsp;", " ");
         return html;
     }
 
