@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Settings {
 
-    public static final String VERSION = "1.0.1";
+    public static final String VERSION = "2.0";
     private String site;
     private String[] sites = {"mkerzner.blogspot.com"};
     private String[] tags;
