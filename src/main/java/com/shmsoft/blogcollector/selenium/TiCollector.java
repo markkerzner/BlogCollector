@@ -37,7 +37,6 @@ public class TiCollector implements Runnable {
     @Override
     public void run() {
         Date startDate = new Date();
-        String source = Settings.getSettings().getSource();
         switch (Settings.getSettings().getSource()) {
             case Settings.BLOG:
                 downloadFromBlog();
