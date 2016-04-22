@@ -105,16 +105,14 @@
     </Component>
     <Component class="javax.swing.JLabel" name="labelSite">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Site"/>
+        <Property name="text" type="java.lang.String" value="Source"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="siteChoiceCombo">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="3">
-            <StringItem index="0" value="mkerzner.blogger.com"/>
-            <StringItem index="1" value=" "/>
-            <StringItem index="2" value=" "/>
+          <StringArray count="1">
+            <StringItem index="0" value=" "/>
           </StringArray>
         </Property>
       </Properties>

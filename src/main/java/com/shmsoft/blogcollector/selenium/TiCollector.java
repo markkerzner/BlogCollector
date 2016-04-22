@@ -18,8 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Automate file downloads from Talmud Illuminated, http://mkerzner.blogspot.com/ Although some
- * settings are specific to this blog, you can clone this class and adjust it to other situations.
+ * Automate file downloads from Talmud Illuminated,
+ * http://mkerzner.blogspot.com/ Although some settings are specific to this
+ * blog, you can clone this class and adjust it to other situations.
  *
  * @author mark
  */
@@ -36,9 +37,34 @@ public class TiCollector implements Runnable {
     @Override
     public void run() {
         Date startDate = new Date();
-        
+        String source = Settings.getSettings().getSource();
+        switch (Settings.getSettings().getSource()) {
+            case Settings.BLOG:
+                downloadFromBlog();
+                break;
+            case Settings.BLOG_LOCAL:
+                loadFromBlogLocal();
+                break;
+            case Settings.SITE_LOCAL:
+                loadFromSiteLocal();
+                break;
+            default:
+                logger.warn("Nothing to do - source not set");
+        }
+        long duration = (new Date().getTime() - startDate.getTime()) / 1000;
+        logger.info("Duration in seconds: {}", duration);
+    }
+
+    private void loadFromBlogLocal() {
+
+    }
+
+    private void loadFromSiteLocal() {
+
+    }
+
+    private void downloadFromBlog() {
         WebDriver driver = new HtmlUnitDriver();
-        
 
         String[] tags = Settings.getSettings().getSelectedTagsByName();
         logger.info("Ready to search for {} tages", tags.length);
@@ -61,8 +87,7 @@ public class TiCollector implements Runnable {
                 logger.warn("Problem with tag {}, going to the next one", tag, e);
             }
         }
-        long duration = (new Date().getTime() - startDate.getTime()) / 1000;
-        logger.info("Duration in seconds: {}", duration);
+
     }
 
     private String sanitize(String html) {

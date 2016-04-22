@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author mark
  */
-public class AutoDownloadDialog extends javax.swing.JDialog {
+public class DownloadDialog extends javax.swing.JDialog {
 
-    private final static Logger logger = LoggerFactory.getLogger(AutoDownloadDialog.class);
+    private final static Logger logger = LoggerFactory.getLogger(DownloadDialog.class);
     /**
      * A return status code - returned if Cancel button has been pressed
      */
@@ -40,7 +40,7 @@ public class AutoDownloadDialog extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public AutoDownloadDialog(java.awt.Frame parent, boolean modal) {
+    public DownloadDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
 
@@ -194,20 +194,21 @@ public class AutoDownloadDialog extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AutoDownloadDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DownloadDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AutoDownloadDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DownloadDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AutoDownloadDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DownloadDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AutoDownloadDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DownloadDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AutoDownloadDialog dialog = new AutoDownloadDialog(new javax.swing.JFrame(), true);
+                DownloadDialog dialog = new DownloadDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

@@ -133,7 +133,7 @@
             <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="1. Collect the blog and convert it to objects&#xa;2. Records images and links&#xa;3. Form web pages, store images in a dir&#xa;4. Adjust cross links&#xa;5. All Tanach sources should be correct"/>
+            <Property name="text" type="java.lang.String" value="1. Collect the blog and convert it to objects&#xa;2. Record images and links&#xa;3. Form web pages, store images in a dir&#xa;4. Adjust cross links&#xa;5. All Tanach sources should be correct"/>
           </Properties>
         </Component>
       </SubComponents>

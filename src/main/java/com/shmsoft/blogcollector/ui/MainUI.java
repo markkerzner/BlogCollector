@@ -32,7 +32,7 @@ public class MainUI extends javax.swing.JFrame {
         editMenu = new javax.swing.JMenu();
         optionsMenuItem = new javax.swing.JMenuItem();
         downloadMenu = new javax.swing.JMenu();
-        automaticMenuItem = new javax.swing.JMenuItem();
+        startDownloadMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         About = new javax.swing.JMenuItem();
 
@@ -65,13 +65,13 @@ public class MainUI extends javax.swing.JFrame {
 
         downloadMenu.setText("Download");
 
-        automaticMenuItem.setText("Automatic");
-        automaticMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        startDownloadMenuItem.setText("Start");
+        startDownloadMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                automaticMenuItemActionPerformed(evt);
+                startDownloadMenuItemActionPerformed(evt);
             }
         });
-        downloadMenu.add(automaticMenuItem);
+        downloadMenu.add(startDownloadMenuItem);
 
         mainMenu.add(downloadMenu);
 
@@ -116,9 +116,9 @@ public class MainUI extends javax.swing.JFrame {
         showOptionsDialog();
     }//GEN-LAST:event_optionsMenuItemActionPerformed
 
-    private void automaticMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_automaticMenuItemActionPerformed
-        showAutoDownloadDialog();
-    }//GEN-LAST:event_automaticMenuItemActionPerformed
+    private void startDownloadMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startDownloadMenuItemActionPerformed
+        showDownloadDialog();
+    }//GEN-LAST:event_startDownloadMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -158,7 +158,6 @@ public class MainUI extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem About;
-    private javax.swing.JMenuItem automaticMenuItem;
     private javax.swing.JMenu downloadMenu;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
@@ -166,6 +165,7 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuBar mainMenu;
     private javax.swing.JMenuItem optionsMenuItem;
+    private javax.swing.JMenuItem startDownloadMenuItem;
     // End of variables declaration//GEN-END:variables
 
     private void exitApp() {        
@@ -184,11 +184,11 @@ public class MainUI extends javax.swing.JFrame {
     }
 
 
-    private void showAutoDownloadDialog() {
+    private void showDownloadDialog() {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                AutoDownloadDialog dialog = new AutoDownloadDialog(new javax.swing.JFrame(), true);
+                DownloadDialog dialog = new DownloadDialog(new javax.swing.JFrame(), true);
                 dialog.setVisible(true);
             }
         });

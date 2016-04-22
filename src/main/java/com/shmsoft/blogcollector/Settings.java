@@ -15,11 +15,27 @@ import org.slf4j.LoggerFactory;
  */
 public class Settings {
 
-    public static final String VERSION = "2.0";
-    private String site;
-    private String[] sites = {"mkerzner.blogspot.com"};
+    public static final String VERSION = "2.0.1";
+    private String source;
+
+    /**
+     * @return the source
+     */
+    public String getSource() {
+        return source;
+    }
+
+    /**
+     * @param source the source to set
+     */
+    public void setSource(String source) {
+        this.source = source;
+    }
+    public static final String BLOG = "blog";
+    public static final String BLOG_LOCAL = "blog_local";
+    public static final String SITE_LOCAL = "site_local";
     private String[] tags;
-    private int[] selectedTags = new int[0];
+    private int[] selectedTags;
     private String myDownloadDir = "ti-downloads";
     private static final Settings settings = new Settings();
     private final static Logger logger = LoggerFactory.getLogger(Settings.class);
@@ -29,6 +45,8 @@ public class Settings {
         tags = new String[1];
         try {
             tags = FileUtils.readLines(new File("conf/talmud-tags.txt")).toArray((new String[0]));            
+            selectedTags = new int[1];
+            selectedTags[0] = 0;
         } catch (IOException e) {
             logger.error("Problem reading the tags", e);
         }
@@ -38,19 +56,6 @@ public class Settings {
         return settings;
     }
 
-    /**
-     * @return the site
-     */
-    public String getSite() {
-        return site;
-    }
-
-    /**
-     * @param site the site to set
-     */
-    public void setSite(String site) {
-        this.site = site;
-    }
 
     /**
      * @return the tags
@@ -89,13 +94,6 @@ public class Settings {
      */
     public void setMyDownloadDir(String myDownloadDir) {
         this.myDownloadDir = myDownloadDir;
-    }
-
-    /**
-     * @return the sites
-     */
-    public String[] getSites() {
-        return sites;
     }
 
     /**

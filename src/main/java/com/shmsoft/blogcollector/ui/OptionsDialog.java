@@ -8,7 +8,6 @@ import com.shmsoft.blogcollector.Settings;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.text.SimpleDateFormat;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.DefaultComboBoxModel;
@@ -26,7 +25,6 @@ import org.slf4j.LoggerFactory;
 public class OptionsDialog extends javax.swing.JDialog {
 
     Logger logger = LoggerFactory.getLogger(getClass().getName());
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
     /**
      * A return status code - returned if Cancel button has been pressed
      */
@@ -100,9 +98,9 @@ public class OptionsDialog extends javax.swing.JDialog {
             }
         });
 
-        labelSite.setText("Site");
+        labelSite.setText("Source");
 
-        siteChoiceCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "mkerzner.blogger.com", " ", " " }));
+        siteChoiceCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " " }));
 
         jScrollPane2.setViewportView(tagsList);
 
@@ -250,33 +248,20 @@ public class OptionsDialog extends javax.swing.JDialog {
 
     private void showData() {
         Settings settings = Settings.getSettings();
-        DefaultComboBoxModel model = new DefaultComboBoxModel(settings.getSites());
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        model.addElement(Settings.BLOG);
+        model.addElement(Settings.BLOG_LOCAL);
+        model.addElement(Settings.SITE_LOCAL);
         siteChoiceCombo.setModel(model);
-        siteChoiceCombo.setSelectedIndex(0);
+        siteChoiceCombo.setSelectedItem(settings.getSource());
         tagsList.setListData(settings.getTags());
         tagsList.setSelectedIndices(settings.getSelectedTags());
-    }
-
-    private String numberOrBlank(int i) {
-        if (i == 0) {
-            return "";
-        } else {
-            return Integer.toString(i);
-        }
-    }
-
-    private int blankOrNumber(String text) {
-        if (text.trim().isEmpty()) {
-            return 0;
-        } else {
-            return Integer.parseInt(text.trim());
-        }
     }
 
     private boolean saveData() {
         try {
             Settings settings = Settings.getSettings();
-            settings.setSite(siteChoiceCombo.getSelectedItem().toString());
+            settings.setSource(siteChoiceCombo.getSelectedItem().toString());
             settings.setSelectedTags(tagsList.getSelectedIndices());            
         } catch (NumberFormatException | HeadlessException e) {
             logger.debug("Error saving options", e);

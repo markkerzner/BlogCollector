@@ -117,7 +117,7 @@ public class AboutDialog extends javax.swing.JDialog {
         explainText.setEditable(false);
         explainText.setColumns(20);
         explainText.setRows(5);
-        explainText.setText("1. Collect the blog and convert it to objects\n2. Records images and links\n3. Form web pages, store images in a dir\n4. Adjust cross links\n5. All Tanach sources should be correct");
+        explainText.setText("1. Collect the blog and convert it to objects\n2. Record images and links\n3. Form web pages, store images in a dir\n4. Adjust cross links\n5. All Tanach sources should be correct");
         jScrollPane1.setViewportView(explainText);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
