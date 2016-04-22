@@ -4,3 +4,4 @@ nbactions.xml
 .idea/
 *.iml
 ti-downloads/
+.DS_Store
