@@ -1,16 +1,27 @@
 package com.shmsoft.blogcollector.selenium;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.io.Files;
 import com.shmsoft.blogcollector.Settings;
+import com.shmsoft.site.Link;
+import com.shmsoft.site.Page;
+import com.shmsoft.site.Site;
+import com.shmsoft.site.Tractate;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
+import static org.openqa.selenium.By.linkText;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -36,26 +47,63 @@ public class TiCollector implements Runnable {
 
     @Override
     public void run() {
-        Date startDate = new Date();
-        switch (Settings.getSettings().getSource()) {
-            case Settings.BLOG:
-                downloadFromBlog();
-                break;
-            case Settings.BLOG_LOCAL:
-                loadFromBlogLocal();
-                break;
-            case Settings.SITE_LOCAL:
-                loadFromSiteLocal();
-                break;
-            default:
-                logger.warn("Nothing to do - source not set");
+        try {
+            Date startDate = new Date();
+            switch (Settings.getSettings().getSource()) {
+                case Settings.BLOG:
+                    downloadFromBlog();
+                    break;
+                case Settings.BLOG_LOCAL:
+                    loadFromBlogLocal();
+                    break;
+                case Settings.SITE_LOCAL:
+                    loadFromSiteLocal();
+                    break;
+                default:
+                    logger.warn("Nothing to do - source not set");
+            }
+            long duration = (new Date().getTime() - startDate.getTime()) / 1000;
+            logger.info("Duration in seconds: {}", duration);
+        } catch (IOException e) {
+            logger.error("Too bad", e);
         }
-        long duration = (new Date().getTime() - startDate.getTime()) / 1000;
-        logger.info("Duration in seconds: {}", duration);
     }
 
-    private void loadFromBlogLocal() {
-
+    private void loadFromBlogLocal() throws IOException {
+        Settings settings = Settings.getSettings();
+        String blogRoot = settings.getMyDownloadDir();
+        String[] tractates = new File(blogRoot).list();
+        Site site = Site.site();
+        for (String readTractate : tractates) {
+            Tractate tractate = site.getTractate(readTractate);
+            File tractateFile = new File(blogRoot + "/" + readTractate);
+            if (tractateFile.isDirectory()) {
+                String[] pages = tractateFile.list();
+                for (String readPage : pages) {
+                    Page page = new Page();
+                    tractate.addPage(page);
+                    File pageFile = new File(blogRoot + "/" + readTractate + "/" + readPage);
+                    if (!pageFile.isHidden()) {
+                        String html = Files.toString(pageFile,
+                                Charset.defaultCharset());
+                        Document doc = Jsoup.parse(html);
+                        Elements readLinks = doc.getElementsByTag("a");
+                        for (Element readLink : readLinks) {
+                            // the first link in the blog is page title
+                            if (page.getTitle() == null) {
+                                page.setTitle(readLink.text());
+                            } else if (page.getImageLink() == null) { // the next one is art
+                                page.setImageLink(readLink.attr("href"));
+                            } else { // other links are important
+                                page.getLinks().add(new Link(readLink.attr("href"), readLink.text()));
+                            }
+                        }
+                        page.setContents(doc.body().text());
+                        // we are still missing line breaks!!!
+                    }
+                }
+            }
+        }
     }
 
     private void loadFromSiteLocal() {
@@ -90,13 +138,15 @@ public class TiCollector implements Runnable {
     }
 
     private String sanitize(String html) {
+        // We will be parsing, so do not sanitize
+
         // TODO this may really be a hack, we should be able to to special characters, but for now, 
         // let's substitute them
-        html = html.replaceAll("–", "-");
-        html = html.replaceAll("“", "\"");
-        html = html.replaceAll("”", "\"");
-        // TODO did not work for some reason. I am telling you, sanitize all :)
-        html = html.replaceAll("&nbsp;", " ");
+//        html = html.replaceAll("–", "-");
+//        html = html.replaceAll("“", "\"");
+//        html = html.replaceAll("”", "\"");
+//        // TODO did not work for some reason. I am telling you, sanitize all :)
+//        html = html.replaceAll("&nbsp;", " ");
         return html;
     }
 

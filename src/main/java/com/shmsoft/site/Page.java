@@ -1,13 +1,17 @@
 package com.shmsoft.site;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author mark
  */
 public class Page {
     private String name; // like 'kiddushin23.html'
-    private String title; // like "Who is allows and who is not..."
-    private String contents; // html contents
+    private String title; // like "Kiddushin 1 - Who is allows and who is not..."
+    private String contents; // text contents
+    private List <Link> links = new ArrayList <> ();
     private String imageLink; // like 'images/image-name'
     private String imageTitle;
 
@@ -79,6 +83,20 @@ public class Page {
      */
     public void setImageTitle(String imageTitle) {
         this.imageTitle = imageTitle;
+    }
+
+    /**
+     * @return the links
+     */
+    public List <Link> getLinks() {
+        return links;
+    }
+
+    /**
+     * @param links the links to set
+     */
+    public void setLinks(List <Link> links) {
+        this.links = links;
     }
     
 }
