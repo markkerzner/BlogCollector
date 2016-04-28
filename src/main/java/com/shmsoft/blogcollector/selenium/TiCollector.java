@@ -55,6 +55,7 @@ public class TiCollector implements Runnable {
                     break;
                 case Settings.BLOG_LOCAL:
                     loadFromBlogLocal();
+                    formSite();
                     break;
                 case Settings.SITE_LOCAL:
                     loadFromSiteLocal();
@@ -80,10 +81,11 @@ public class TiCollector implements Runnable {
             if (tractateFile.isDirectory()) {
                 String[] pages = tractateFile.list();
                 for (String readPage : pages) {
-                    Page page = new Page();
-                    tractate.addPage(page);
                     File pageFile = new File(blogRoot + "/" + readTractate + "/" + readPage);
                     if (!pageFile.isHidden()) {
+                        Page page = new Page();
+                        tractate.addPage(page);
+                        page.setName(readPage);
                         String html = Files.toString(pageFile,
                                 Charset.defaultCharset());
                         Document doc = Jsoup.parse(html);
@@ -93,13 +95,20 @@ public class TiCollector implements Runnable {
                             if (page.getTitle() == null) {
                                 page.setTitle(readLink.text());
                             } else if (page.getImageLink() == null) { // the next one is art
-                                page.setImageLink(readLink.attr("href"));
+                                String imageDir = settings.getSite() + "/" + readTractate + "/images";
+                                new File(imageDir).mkdirs();
+                                String blogImageLink = readLink.attr("href");
+                                // TODO download this image
+                                int lastSlash = blogImageLink.lastIndexOf("/");
+                                String localImageLocation = "images/" + blogImageLink.substring(lastSlash + 1);
+                                page.setImageLink(localImageLocation);
                             } else { // other links are important
                                 page.getLinks().add(new Link(readLink.attr("href"), readLink.text()));
                             }
                         }
-                        page.setContents(doc.body().text());
-                        // we are still missing line breaks!!!
+                        String prep = Jsoup.parse(doc.html().replaceAll("(?i)<br[^>]*>", "br2n")).text();
+                        String text = prep.replaceAll("br2n", "\n");
+                        page.setContents(text.substring(page.getTitle().length() + 1));
                     }
                 }
             }
@@ -301,6 +310,20 @@ public class TiCollector implements Runnable {
             return words[0].toLowerCase() + words[1].toLowerCase() + words[2] + ".html";
         } else {
             return words[0].toLowerCase() + words[1] + ".html";
+        }
+    }
+
+    private void formSite() throws IOException {
+        Settings settings = Settings.getSettings();
+        Site site = Site.site();
+        for (Tractate tractate : site.getTractates()) {
+            for (Page page : tractate.getPages()) {
+                File file = new File(settings.getSite() + "/"
+                        + tractate.getName() + "/"
+                        + page.getName());
+                new File(file.getParent()).mkdirs();
+                Files.write(page.formHtml(), file, Charset.defaultCharset());
+            }
         }
     }
 }

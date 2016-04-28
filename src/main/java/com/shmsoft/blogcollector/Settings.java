@@ -37,6 +37,7 @@ public class Settings {
     private String[] tags;
     private int[] selectedTags;
     private String myDownloadDir = "ti-downloads";
+    private String site = "site";
     private static final Settings settings = new Settings();
     private final static Logger logger = LoggerFactory.getLogger(Settings.class);
 
@@ -131,5 +132,8 @@ public class Settings {
         } else {
             return OS.UNKNOWN;
         }
+    }
+    public String getSite() {
+        return site;
     }
 }

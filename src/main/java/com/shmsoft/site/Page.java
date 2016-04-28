@@ -98,5 +98,18 @@ public class Page {
     public void setLinks(List <Link> links) {
         this.links = links;
     }
-    
+    public String formHtml() {
+        StringBuilder b = new StringBuilder();
+        b.append("<html><title>").append(title).append("</title>").append("<body>");
+        b.append(title).append("<br/><br/>");
+        b.append("<img src=\"" + imageLink + "\"" + "/>");
+        String contentsReplace = contents.replace("\n", "<br/>");
+        for (Link link: links) {
+            contentsReplace = contentsReplace.replace(link.getText(), 
+                    "<a href = \"" + link.getRef() + "\"");
+        }
+        b.append(contentsReplace);
+        b.append("</body></html>");
+        return b.toString();
+    }
 }
