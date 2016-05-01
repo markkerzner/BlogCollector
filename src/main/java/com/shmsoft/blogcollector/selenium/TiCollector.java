@@ -97,20 +97,22 @@ public class TiCollector implements Runnable {
                             // the first link in the blog is page title
                             if (page.getTitle() == null) {
                                 page.setTitle(readLink.text());
-                            } else if (page.getImageLink() == null) { // the next one is art
-                                // TODO get the "scr=" from the image, not the link
-                                String imageDir = settings.getSite() + "/images";
+                            } else if (page.getImageLink() == null) { // the next link refers to the illustration
+                                // get the image URL
+                                Element image = doc.select("img").first();
+                                String blogImageLink = image.absUrl("src");
+                                // save it locally
+                                String imageDir = settings.getSite() + "/images/";
                                 new File(imageDir).mkdirs();
-                                String blogImageLink = readLink.attr("href");                                
                                 int lastSlash = blogImageLink.lastIndexOf("/");
-                                new File("images").mkdirs();
-                                String localImageLocation = "images/" + blogImageLink.substring(lastSlash + 1);                                
+                                String localImageLocation = imageDir + blogImageLink.substring(lastSlash + 1);
                                 page.setImageLink(localImageLocation);
                                 if (!new File(localImageLocation).exists()) {
-                                    // download the image if not there                                    
-                                    // FileUtils.copyURLToFile(new URL(blogImageLink), new File(localImageLocation), 1000, 1000);
-                                    byte[] bytes = Jsoup.connect(blogImageLink).ignoreContentType(true).execute().bodyAsBytes();
-                                    Files.write(bytes, new File(localImageLocation));
+                                    // download the image if not there    
+                                    LOGGER.debug("Download image {} to {}", blogImageLink, localImageLocation);
+                                    FileUtils.copyURLToFile(new URL(blogImageLink), new File(localImageLocation), 1000, 1000);
+//                                    byte[] bytes = Jsoup.connect(blogImageLink).ignoreContentType(true).execute().bodyAsBytes();
+//                                    Files.write(bytes, new File(localImageLocation));
                                 }
                             } else { // other links are important
                                 page.getLinks().add(new Link(readLink.attr("href"), readLink.text()));
@@ -124,7 +126,7 @@ public class TiCollector implements Runnable {
             }
         }
     }
-    
+
     private void loadFromSiteLocal() {
 
     }
@@ -265,12 +267,13 @@ public class TiCollector implements Runnable {
     }
 
     private String makeFileName(String tag) {
-        tag = tag.replace(" " , "_");
+        tag = tag.replace(" ", "_");
         tag = tag.replace("\'", "");
         // TODO - decide what todo :)
 //        tag = tag.replace("\’", "");        
         return tag;
     }
+
     private String getTitle(String post) {
         int start = post.indexOf('>');
         if (start < 0) {
