@@ -98,6 +98,7 @@ public class TiCollector implements Runnable {
                             if (page.getTitle() == null) {
                                 page.setTitle(readLink.text());
                             } else if (page.getImageLink() == null) { // the next one is art
+                                // TODO get the "scr=" from the image, not the link
                                 String imageDir = settings.getSite() + "/images";
                                 new File(imageDir).mkdirs();
                                 String blogImageLink = readLink.attr("href");                                
@@ -106,9 +107,9 @@ public class TiCollector implements Runnable {
                                 String localImageLocation = "images/" + blogImageLink.substring(lastSlash + 1);                                
                                 page.setImageLink(localImageLocation);
                                 if (!new File(localImageLocation).exists()) {
-                                    // download the image if not there
+                                    // download the image if not there                                    
+                                    // FileUtils.copyURLToFile(new URL(blogImageLink), new File(localImageLocation), 1000, 1000);
                                     byte[] bytes = Jsoup.connect(blogImageLink).ignoreContentType(true).execute().bodyAsBytes();
-                                    FileUtils.copyURLToFile(new URL(blogImageLink), new File(localImageLocation));
                                     Files.write(bytes, new File(localImageLocation));
                                 }
                             } else { // other links are important
