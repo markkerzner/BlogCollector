@@ -37,12 +37,12 @@ import org.slf4j.LoggerFactory;
  */
 public class TiCollector implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(TiCollector.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TiCollector.class);
     private boolean stop = false;
     private List<String> titles;
 
     public TiCollector() {
-        logger.debug("Initiated TiCollector instance");
+        LOGGER.debug("Initiated TiCollector instance");
     }
 
     @Override
@@ -61,12 +61,12 @@ public class TiCollector implements Runnable {
                     loadFromSiteLocal();
                     break;
                 default:
-                    logger.warn("Nothing to do - source not set");
+                    LOGGER.warn("Nothing to do - source not set");
             }
             long duration = (new Date().getTime() - startDate.getTime()) / 1000;
-            logger.info("Duration in seconds: {}", duration);
+            LOGGER.info("Duration in seconds: {}", duration);
         } catch (IOException e) {
-            logger.error("Too bad", e);
+            LOGGER.error("Too bad", e);
         }
     }
 
@@ -81,6 +81,9 @@ public class TiCollector implements Runnable {
             if (tractateFile.isDirectory()) {
                 String[] pages = tractateFile.list();
                 for (String readPage : pages) {
+                    if ("index.html".equals(readPage)) {
+                        continue;
+                    }
                     File pageFile = new File(blogRoot + "/" + readTractate + "/" + readPage);
                     if (!pageFile.isHidden()) {
                         Page page = new Page();
@@ -95,7 +98,7 @@ public class TiCollector implements Runnable {
                             if (page.getTitle() == null) {
                                 page.setTitle(readLink.text());
                             } else if (page.getImageLink() == null) { // the next one is art
-                                String imageDir = settings.getSite() + "/" + readTractate + "/images";
+                                String imageDir = settings.getSite() + "/images";
                                 new File(imageDir).mkdirs();
                                 String blogImageLink = readLink.attr("href");                                
                                 int lastSlash = blogImageLink.lastIndexOf("/");
@@ -129,11 +132,11 @@ public class TiCollector implements Runnable {
         WebDriver driver = new HtmlUnitDriver();
 
         String[] tags = Settings.getSettings().getSelectedTagsByName();
-        logger.info("Ready to search for {} tages", tags.length);
+        LOGGER.info("Ready to search for {} tages", tags.length);
         for (String tag : tags) {
             titles = new ArrayList<>();
             try {
-                logger.info("Downloading for tag {}", tag);
+                LOGGER.info("Downloading for tag {}", tag);
                 driver.get("http://mkerzner.blogspot.com/search/label/" + tag);
                 boolean more = true;
                 while (more) {
@@ -141,12 +144,12 @@ public class TiCollector implements Runnable {
                     html = sanitize(html);
                     List<String> posts = findPosts(html);
                     savePosts(tag, posts);
-                    logger.debug("Downloading {} documents for the tag {}", posts.size(), tag);
+                    LOGGER.debug("Downloading {} documents for the tag {}", posts.size(), tag);
                     more = goToNextPage(driver, html);
                 }
                 arrangeDownloadedFiles(tag);
             } catch (Exception e) {
-                logger.warn("Problem with tag {}, going to the next one", tag, e);
+                LOGGER.warn("Problem with tag {}, going to the next one", tag, e);
             }
         }
 
@@ -170,7 +173,7 @@ public class TiCollector implements Runnable {
         try {
             query = driver.findElement(By.id("Blog1_blog-pager-older-link"));
         } catch (Exception e) {
-            logger.info("No Older Posts");
+            LOGGER.info("No Older Posts");
             return false;
         }
         query.click();
@@ -233,10 +236,10 @@ public class TiCollector implements Runnable {
         try {
             Collections.reverse(titles);
             FileUtils.write(new File(Settings.getSettings().getMyDownloadDir() + "/"
-                    + tagToDir(tag.toLowerCase()) + "/index.html"),
+                    + makeFileName(tag.toLowerCase()) + "/index.html"),
                     "<html>" + StringUtils.join(titles, "<br/>\n") + "</html>", true);
         } catch (IOException e) {
-            logger.error("Could not arrange titles", e);
+            LOGGER.error("Could not arrange titles", e);
         }
     }
 
@@ -253,14 +256,14 @@ public class TiCollector implements Runnable {
                 String title = getTitle(post).trim();
                 titles.add(getTitleWithLink(title));
                 FileUtils.write(new File(Settings.getSettings().getMyDownloadDir() + "/"
-                        + tagToDir(tag.toLowerCase()) + "/" + getHtmlFileName(title)), "<html>" + post + "</html>");
+                        + makeFileName(tag.toLowerCase()) + "/" + getHtmlFileName(title)), "<html>" + post + "</html>");
             }
         } catch (IOException e) {
-            logger.error("Problem saving the post titles", e);
+            LOGGER.error("Problem saving the post titles", e);
         }
     }
 
-    private String tagToDir(String tag) {
+    private String makeFileName(String tag) {
         tag = tag.replace(" " , "_");
         tag = tag.replace("\'", "");
         return tag;
@@ -320,7 +323,7 @@ public class TiCollector implements Runnable {
         if (longTitle) {
             return words[0].toLowerCase() + words[1].toLowerCase() + words[2] + ".html";
         } else {
-            return words[0].toLowerCase() + words[1] + ".html";
+            return makeFileName(words[0].toLowerCase() + words[1] + ".html");
         }
     }
 
