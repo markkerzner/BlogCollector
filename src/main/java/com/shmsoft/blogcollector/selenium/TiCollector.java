@@ -266,6 +266,8 @@ public class TiCollector implements Runnable {
     private String makeFileName(String tag) {
         tag = tag.replace(" " , "_");
         tag = tag.replace("\'", "");
+        // TODO - decide what todo :)
+//        tag = tag.replace("\’", "");        
         return tag;
     }
     private String getTitle(String post) {

@@ -14,7 +14,6 @@ Horayot
 Keritot
 Ketubot
 Kiddushin
-Kinnim
 Makkot
 Me'ilah
 Megillah
@@ -33,7 +32,6 @@ Shevuot
 Sotah
 Sukkah
 Taanit
-Tamid
 Temurah
 Yevamot
 Yoma
