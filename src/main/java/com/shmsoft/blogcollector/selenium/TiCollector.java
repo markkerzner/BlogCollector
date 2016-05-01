@@ -9,6 +9,7 @@ import com.shmsoft.site.Site;
 import com.shmsoft.site.Tractate;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +22,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
-import static org.openqa.selenium.By.linkText;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -97,11 +97,17 @@ public class TiCollector implements Runnable {
                             } else if (page.getImageLink() == null) { // the next one is art
                                 String imageDir = settings.getSite() + "/" + readTractate + "/images";
                                 new File(imageDir).mkdirs();
-                                String blogImageLink = readLink.attr("href");
-                                // TODO download this image
+                                String blogImageLink = readLink.attr("href");                                
                                 int lastSlash = blogImageLink.lastIndexOf("/");
-                                String localImageLocation = "images/" + blogImageLink.substring(lastSlash + 1);
+                                new File("images").mkdirs();
+                                String localImageLocation = "images/" + blogImageLink.substring(lastSlash + 1);                                
                                 page.setImageLink(localImageLocation);
+                                if (!new File(localImageLocation).exists()) {
+                                    // download the image if not there
+                                    byte[] bytes = Jsoup.connect(blogImageLink).ignoreContentType(true).execute().bodyAsBytes();
+                                    FileUtils.copyURLToFile(new URL(blogImageLink), new File(localImageLocation));
+                                    Files.write(bytes, new File(localImageLocation));
+                                }
                             } else { // other links are important
                                 page.getLinks().add(new Link(readLink.attr("href"), readLink.text()));
                             }
@@ -114,7 +120,7 @@ public class TiCollector implements Runnable {
             }
         }
     }
-
+    
     private void loadFromSiteLocal() {
 
     }
@@ -227,7 +233,7 @@ public class TiCollector implements Runnable {
         try {
             Collections.reverse(titles);
             FileUtils.write(new File(Settings.getSettings().getMyDownloadDir() + "/"
-                    + tag.toLowerCase() + "/index.html"),
+                    + tagToDir(tag.toLowerCase()) + "/index.html"),
                     "<html>" + StringUtils.join(titles, "<br/>\n") + "</html>", true);
         } catch (IOException e) {
             logger.error("Could not arrange titles", e);
@@ -247,13 +253,18 @@ public class TiCollector implements Runnable {
                 String title = getTitle(post).trim();
                 titles.add(getTitleWithLink(title));
                 FileUtils.write(new File(Settings.getSettings().getMyDownloadDir() + "/"
-                        + tag.toLowerCase() + "/" + getHtmlFileName(title)), "<html>" + post + "</html>");
+                        + tagToDir(tag.toLowerCase()) + "/" + getHtmlFileName(title)), "<html>" + post + "</html>");
             }
         } catch (IOException e) {
             logger.error("Problem saving the post titles", e);
         }
     }
 
+    private String tagToDir(String tag) {
+        tag = tag.replace(" " , "_");
+        tag = tag.replace("\'", "");
+        return tag;
+    }
     private String getTitle(String post) {
         int start = post.indexOf('>');
         if (start < 0) {

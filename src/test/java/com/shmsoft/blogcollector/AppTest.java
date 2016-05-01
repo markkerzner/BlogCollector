@@ -6,6 +6,7 @@ import junit.framework.TestSuite;
 
 /**
  * Unit test for simple App.
+ * No tests now - we do not want to download anything on every test :)
  */
 public class AppTest 
     extends TestCase
