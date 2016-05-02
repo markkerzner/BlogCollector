@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -40,6 +41,7 @@ public class TiCollector implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(TiCollector.class);
     private boolean stop = false;
     private List<String> titles;
+    private Pattern PAGE_PATTERN = Pattern.compile("[a-z]+[[0-9+]");
     
     public TiCollector() {
         LOGGER.debug("Initiated TiCollector instance");

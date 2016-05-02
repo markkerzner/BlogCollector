@@ -39,4 +39,15 @@ public class Link {
     public void setText(String text) {
         this.text = text;
     }
+    /** 
+     * In case that the link points to another place on the blog, it is converted to a site link
+     * This relies on the regularity in page naming, which will not be 100% consistent
+     * so manual fixes may still be needed later
+     */
+    public void convertBlogToSite() {
+        if (ref.contains("blogspot")) {
+            int lastSlash = ref.lastIndexOf("/");
+            
+        }
+    }
 }
