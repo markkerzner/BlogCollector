@@ -1,5 +1,6 @@
 package com.shmsoft.site;
 
+import com.shmsoft.blogcollector.Settings;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,11 +103,11 @@ public class Page {
         StringBuilder b = new StringBuilder();
         b.append("<html><title>").append(title).append("</title>").append("<body>");
         b.append(title).append("<br/><br/>");
-        b.append("<img src=\"" + imageLink + "\"" + "/>");
+        b.append("<img src=\"").append(imageLink.replace(Settings.getSettings().getSite(), "..")).append("\"" + "/>");
         String contentsReplace = contents.replace("\n", "<br/>");
         for (Link link: links) {
             contentsReplace = contentsReplace.replace(link.getText(), 
-                    "<a href = \"" + link.getRef() + "\"");
+                    "<a href = \"" + link.getRef() + "\">" + link.getText() + "</a>");
         }
         b.append(contentsReplace);
         b.append("</body></html>");
