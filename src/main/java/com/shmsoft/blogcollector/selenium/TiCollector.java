@@ -41,7 +41,7 @@ public class TiCollector implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(TiCollector.class);
     private boolean stop = false;
     private List<String> titles;
-    private Pattern PAGE_PATTERN = Pattern.compile("[a-z]+[[0-9+]");
+    private Pattern PAGE_PATTERN = Pattern.compile("[a-z]+[0-9]+");
     
     public TiCollector() {
         LOGGER.debug("Initiated TiCollector instance");
@@ -174,15 +174,10 @@ public class TiCollector implements Runnable {
     }
     
     private String sanitize(String html) {
-        // We will be parsing, so do not sanitize
-
-        // TODO this may really be a hack, we should be able to to special characters, but for now, 
-        // let's substitute them
-//        html = html.replaceAll("–", "-");
-//        html = html.replaceAll("“", "\"");
-//        html = html.replaceAll("”", "\"");
-//        // TODO did not work for some reason. I am telling you, sanitize all :)
-//        html = html.replaceAll("&nbsp;", " ");
+        html = html.replaceAll("–", "-");
+        html = html.replaceAll("“", "\"");
+        html = html.replaceAll("”", "\"");
+        html = html.replaceAll("&nbsp;", " ");
         return html;
     }
     
