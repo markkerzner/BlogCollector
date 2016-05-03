@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -37,16 +36,15 @@ import org.slf4j.LoggerFactory;
  * @author mark
  */
 public class TiCollector implements Runnable {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(TiCollector.class);
     private boolean stop = false;
     private List<String> titles;
-    private Pattern PAGE_PATTERN = Pattern.compile("[a-z]+[0-9]+");
-    
+
     public TiCollector() {
         LOGGER.debug("Initiated TiCollector instance");
     }
-    
+
     @Override
     public void run() {
         try {
@@ -60,7 +58,7 @@ public class TiCollector implements Runnable {
                         // Devlation from FailFast pattern - need to debug site building
                         loadFromBlogLocal();
                     } catch (Exception e) {
-                        LOGGER.warn("Content not completely read from blog, but continuing to build site");
+                        LOGGER.warn("Content not completely read from blog, but continuing to build site", e);
                     }
                     formSite();
                     break;
@@ -76,7 +74,7 @@ public class TiCollector implements Runnable {
             LOGGER.error("Too bad", e);
         }
     }
-    
+
     private void loadFromBlogLocal() throws IOException {
         Settings settings = Settings.getSettings();
         String blogRoot = settings.getMyDownloadDir();
@@ -130,25 +128,21 @@ public class TiCollector implements Runnable {
                         if (text.length() <= page.getTitle().length()) {
                             LOGGER.warn("text {} and title {}", text, page.getTitle());
                         }
-                        // a bit of a hack - placeholder pages should be deleted from the blog
-                        // but since I am on a plane now, it is easier to hack
-                        if (!text.toLowerCase().contains("placeholder") && !page.getTitle().toLowerCase().contains("placeholder")) {
-                            page.setContents(text.substring(page.getTitle().length() + 1));
-                            tractate.addPage(page);
-                        }
+                        page.setContents(text.substring(page.getTitle().length() + 1));
+                        tractate.addPage(page);
                     }
                 }
             }
         }
     }
-    
+
     private void loadFromSiteLocal() {
-        
+
     }
-    
+
     private void downloadFromBlog() {
         WebDriver driver = new HtmlUnitDriver();
-        
+
         String[] tags = Settings.getSettings().getSelectedTagsByName();
         LOGGER.info("Ready to search for {} tages", tags.length);
         for (String tag : tags) {
@@ -170,9 +164,9 @@ public class TiCollector implements Runnable {
                 LOGGER.warn("Problem with tag {}, going to the next one", tag, e);
             }
         }
-        
+
     }
-    
+
     private String sanitize(String html) {
         html = html.replaceAll("–", "-");
         html = html.replaceAll("“", "\"");
@@ -180,7 +174,7 @@ public class TiCollector implements Runnable {
         html = html.replaceAll("&nbsp;", " ");
         return html;
     }
-    
+
     private boolean goToNextPage(WebDriver driver, String html) {
         WebElement query;
         try {
@@ -192,7 +186,7 @@ public class TiCollector implements Runnable {
         query.click();
         return true;
     }
-    
+
     public static void main(String[] args) throws Exception {
         TiCollector instance = new TiCollector();
         Settings settings = Settings.getSettings();
@@ -244,7 +238,7 @@ public class TiCollector implements Runnable {
     synchronized public void setStop(boolean stop) {
         this.stop = stop;
     }
-    
+
     private void arrangeDownloadedFiles(String tag) {
         try {
             Collections.reverse(titles);
@@ -255,13 +249,13 @@ public class TiCollector implements Runnable {
             LOGGER.error("Could not arrange titles", e);
         }
     }
-    
+
     @VisibleForTesting
     String getTagDir(String tag) {
         String[] parts = tag.split(":");
         return parts[1];
     }
-    
+
     @VisibleForTesting
     void savePosts(String tag, List<String> posts) {
         try {
@@ -275,7 +269,7 @@ public class TiCollector implements Runnable {
             LOGGER.error("Problem saving the post titles", e);
         }
     }
-    
+
     private String makeFileName(String tag) {
         tag = tag.replace(" ", "_");
         tag = tag.replace("\'", "");
@@ -283,7 +277,7 @@ public class TiCollector implements Runnable {
 //        tag = tag.replace("\’", "");        
         return tag;
     }
-    
+
     private String getTitle(String post) {
         int start = post.indexOf('>');
         if (start < 0) {
@@ -296,7 +290,7 @@ public class TiCollector implements Runnable {
         int end = post.indexOf('<', start + 1);
         return post.substring(start + 1, end);
     }
-    
+
     private String getTitleWithLink(String title) {
         String[] words = title.split(" ");
         boolean longTitle = false;
@@ -324,7 +318,7 @@ public class TiCollector implements Runnable {
         }
         return builder.toString();
     }
-    
+
     private String getHtmlFileName(String title) {
         String[] words = title.split(" ");
         boolean longTitle = false;
@@ -342,7 +336,7 @@ public class TiCollector implements Runnable {
             return makeFileName(words[0].toLowerCase() + words[1] + ".html");
         }
     }
-    
+
     private void formSite() throws IOException {
         Settings settings = Settings.getSettings();
         Site site = Site.site();

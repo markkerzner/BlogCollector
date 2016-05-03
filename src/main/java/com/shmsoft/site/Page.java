@@ -3,16 +3,22 @@ package com.shmsoft.site;
 import com.shmsoft.blogcollector.Settings;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author mark
  */
 public class Page {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Page.class);
+    private Pattern PAGE_PATTERN = Pattern.compile("[a-z]+[0-9]+");
     private String name; // like 'kiddushin23.html'
     private String title; // like "Kiddushin 1 - Who is allows and who is not..."
     private String contents; // text contents
-    private List <Link> links = new ArrayList <> ();
+    private List<Link> links = new ArrayList<>();
     private String imageLink; // like 'images/image-name'
     private String imageTitle;
 
@@ -89,24 +95,30 @@ public class Page {
     /**
      * @return the links
      */
-    public List <Link> getLinks() {
+    public List<Link> getLinks() {
         return links;
     }
 
     /**
      * @param links the links to set
      */
-    public void setLinks(List <Link> links) {
+    public void setLinks(List<Link> links) {
         this.links = links;
     }
+
     public String formHtml() {
         StringBuilder b = new StringBuilder();
         b.append("<html><title>").append(title).append("</title>").append("<body>");
         b.append(title).append("<br/><br/>");
-        b.append("<img src=\"").append(imageLink.replace(Settings.getSettings().getSite(), "..")).append("\"" + "/>");
+        if (imageLink == null) {
+            LOGGER.warn("No image for page {}", name);
+        }
+        if (imageLink != null) {
+            b.append("<img src=\"").append(imageLink.replace(Settings.getSettings().getSite(), "..")).append("\"" + "/>");
+        }
         String contentsReplace = contents.replace("\n", "<br/>");
-        for (Link link: links) {
-            contentsReplace = contentsReplace.replace(link.getText(), 
+        for (Link link : links) {
+            contentsReplace = contentsReplace.replace(link.getText(),
                     "<a href = \"" + link.getRef() + "\">" + link.getText() + "</a>");
         }
         b.append(contentsReplace);
