@@ -3,6 +3,7 @@ package com.shmsoft.site;
 import com.shmsoft.blogcollector.Settings;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +12,10 @@ import org.slf4j.LoggerFactory;
  *
  * @author mark
  */
-public class Page {
+public class Page implements Comparable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Page.class);
-    private Pattern PAGE_PATTERN = Pattern.compile("[a-z]+[0-9]+");
+    private final Pattern PAGE_PATTERN = Pattern.compile("[0-9]+");
     private String name; // like 'kiddushin23.html'
     private String title; // like "Kiddushin 1 - Who is allows and who is not..."
     private String contents; // text contents
@@ -124,5 +125,20 @@ public class Page {
         b.append(contentsReplace);
         b.append("</body></html>");
         return b.toString();
+    }
+    @Override
+    public int compareTo(Object other) {
+        Matcher m = PAGE_PATTERN.matcher(getTitle());
+        String n1 = "1";
+        String n2 = "1";
+        if (m.find()) {
+            n1 = m.group();
+        }
+        Page pOther = (Page) other;
+        Matcher mOther = PAGE_PATTERN.matcher(pOther.getTitle());
+        if (mOther.find()) {
+            n2 = mOther.group();
+        }
+        return new Integer(Integer.parseInt(n1)).compareTo(Integer.parseInt(n2));
     }
 }

@@ -13,6 +13,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
@@ -339,15 +340,24 @@ public class TiCollector implements Runnable {
 
     private void formSite() throws IOException {
         Settings settings = Settings.getSettings();
-        Site site = Site.site();
+        Site site = Site.site();        
         for (Tractate tractate : site.getTractates()) {
+            StringBuilder indexPage = new StringBuilder("<html>");
+            Collections.sort(tractate.getPages());
             for (Page page : tractate.getPages()) {
                 File file = new File(settings.getSite() + "/"
                         + tractate.getName() + "/"
                         + page.getName());
                 new File(file.getParent()).mkdirs();
                 Files.write(page.formHtml(), file, Charset.defaultCharset());
+                String nextIndexLine = "<a href=\"" + page.getName() + "\">" + page.getTitle() + " <br/>";
+                indexPage.append(nextIndexLine);
             }
-        }
+            File file = new File(settings.getSite() + "/"
+                    + tractate.getName() + "/"
+                    + "index.html");
+            indexPage.append("</html>");
+            Files.write(indexPage.toString(), file, Charset.defaultCharset());
+        }        
     }
 }
