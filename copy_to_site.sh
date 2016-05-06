@@ -1,0 +1,2 @@
+cp -R site/* ../TalmudIlluminated/
+
