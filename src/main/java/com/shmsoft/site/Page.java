@@ -115,12 +115,12 @@ public class Page implements Comparable {
             LOGGER.warn("No image for page {}", name);
         }
         if (imageLink != null) {
-            b.append("<img src=\"").append(imageLink.replace(Settings.getSettings().getSite(), "..")).append("\"" + "/>");
+            b.append("<img src=\"").append(imageLink.replaceFirst(Settings.getSettings().getSite(), "..")).append("\"" + "/>");
         }
         String contentsReplace = contents.replace("\n", "<br/>");
         for (Link link : links) {
-            contentsReplace = contentsReplace.replace(link.getText(),
-                    "<a href = \"" + link.getRef() + "\">" + link.getText() + "</a>");
+            contentsReplace = contentsReplace.replaceFirst(link.getText(),
+                    "<a href = \"" + link.getSiteRef() + "\">" + link.getText() + "</a>");
         }
         b.append(contentsReplace);
         b.append("</body></html>");
